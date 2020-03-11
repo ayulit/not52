@@ -12,6 +12,16 @@ public class SawTool extends Tool implements Returnable {
     }
 
     @Override
+    public int getReturnDays() {
+        return 14;
+    }
+
+    @Override
+    public String getDocuments() {
+        return RECEIPT + ", " + PASSPORT;
+    }
+
+    @Override
     public String toString() {
         return "Дисковая пила " + super.toString() +
                 "диск " + radius + "мм ";

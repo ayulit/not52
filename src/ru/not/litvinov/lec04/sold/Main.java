@@ -53,7 +53,9 @@ public class Main {
         System.out.println("\nNext goods can be returned:\n");
         for (Good good: goods) {
             if (good instanceof Returnable) {
-                System.out.println(good);
+                System.out.print(good);
+                System.out.print("| Return in " + ((Returnable) good).getReturnDays() + " days. ");
+                System.out.println("Documents: " + ((Returnable) good).getDocuments());
             }
         }
     }

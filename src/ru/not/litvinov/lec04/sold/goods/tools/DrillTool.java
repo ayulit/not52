@@ -12,6 +12,16 @@ public class DrillTool extends Tool implements Returnable {
     }
 
     @Override
+    public int getReturnDays() {
+        return 7;
+    }
+
+    @Override
+    public String getDocuments() {
+        return RECEIPT;
+    }
+
+    @Override
     public String toString() {
         return "Дрель " + super.toString() +
                 "макс. сверло " + calibre + "мм ";
