@@ -21,7 +21,6 @@ public class ClientController {
     }
 
     void initialize() throws IOException {
-        establishStatus();
         connect(server);
 
         logger.loadHistory();
@@ -61,6 +60,8 @@ public class ClientController {
             } while (true);
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            model.serialize();
         }
     }
 
@@ -76,10 +77,5 @@ public class ClientController {
 
     private void connect(Bot server) {
         server.initialize();
-    }
-
-    private void establishStatus() {
-        // set default or load
-        model.setStatus(ClientStatus.ONLINE);
     }
 }
