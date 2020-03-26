@@ -1,7 +1,7 @@
 package ru.not.litvinov.chatbot;
 
 public class Bot {
-    public static final String BOT_NAME = "BOT: ";
+    public static final String BOT_NAME = "BOT";
 
     void initialize() {
         sayHello();
@@ -16,7 +16,7 @@ public class Bot {
     }
 
     void sayGoodbye() {
-        System.out.println(BOT_NAME + "Goodbye...");
+        System.out.println(BOT_NAME + ": Goodbye...");
     }
 
     public String replyOn(String message) {
