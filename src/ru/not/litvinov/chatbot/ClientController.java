@@ -6,6 +6,7 @@ import java.util.Scanner;
 public class ClientController {
 
     private static final String EXIT = "exit";
+    private static final String STATUS = "status";
 
     private Bot server;
     private Client model;
@@ -46,6 +47,10 @@ public class ClientController {
                 inputMessage = sc.next();
                 if (EXIT.equals(inputMessage)) {
                     break;
+                } else if (STATUS.equals(inputMessage)) {
+                    changeStatus(sc);
+                    view.show(model.getStatus());
+                    continue;
                 }
                 logger.logMessage(model.getUsername(), inputMessage);
 
@@ -59,6 +64,12 @@ public class ClientController {
         }
     }
 
+    private void changeStatus(Scanner sc) {
+        view.changeStatus();
+        ClientStatus clientStatus = ClientStatus.values()[sc.nextInt()];
+        model.setStatus(clientStatus);
+    }
+
     private String send(String message) {
         return server.replyOn(message);
     }
@@ -69,6 +80,6 @@ public class ClientController {
 
     private void establishStatus() {
         // set default or load
-        model.setStatus(ClientStatus.ONLINE);;
+        model.setStatus(ClientStatus.ONLINE);
     }
 }
