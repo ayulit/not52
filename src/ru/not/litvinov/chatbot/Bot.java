@@ -3,19 +3,11 @@ package ru.not.litvinov.chatbot;
 public class Bot {
     public static final String BOT_NAME = "BOT";
 
-    void initialize() {
-        sayHello();
-    }
-
-    void stop() {
-        sayGoodbye();
-    }
-
-    void sayHello() {
+    public void initialize() {
         System.out.println("Chat-bot initialized...");
     }
 
-    void sayGoodbye() {
+    public void stop() {
         System.out.println(BOT_NAME + ": Goodbye...");
     }
 
