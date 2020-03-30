@@ -12,8 +12,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
-public class Logger {
-    private File history = new File ("history.log");
+public class WriterHistoryService implements HistoryService {
+    private File historyFile = new File ("history.log");
     private BufferedWriter writer;
 
     private DateTimeFormatter dateTimeFormatter =
@@ -21,31 +21,39 @@ public class Logger {
                     .withLocale(Locale.UK)
                     .withZone(ZoneId.systemDefault());
 
-
-    public Logger() throws IOException {
-        writer = new BufferedWriter(new FileWriter(history, history.exists()));
+    public WriterHistoryService() throws IOException {
+        writer = new BufferedWriter(new FileWriter(historyFile, historyFile.exists()));
     }
 
-    void loadHistory() {
-        if(history.exists()) {
-            try (FileReader fr = new FileReader(history);
+    @Override
+    public History loadHistory() {
+        History history = new History();
+        if(historyFile.exists()) {
+            try (FileReader fr = new FileReader(historyFile);
                  BufferedReader in = new BufferedReader(fr)) {
                 String line;
                 while ((line = in.readLine()) != null) {
-                    System.out.println(line);
+//                    System.out.println(line);
+                    history.addLine(line);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
+        return history;
     }
 
+    @Override
     public void logMessage(String username, String message) throws IOException {
         writer.write("[" + dateTimeFormatter.format(Instant.now()) + "] " + username + ": " + message + "\n");
     }
 
-    public void flush() throws IOException {
-        writer.flush();
-        writer.close();
+    @Override
+    public void flushHistory() throws IOException {
+        try {
+            writer.flush();
+        } finally {
+            writer.close();
+        }
     }
 }

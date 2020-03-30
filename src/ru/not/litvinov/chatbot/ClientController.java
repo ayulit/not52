@@ -6,28 +6,24 @@ import java.util.Scanner;
 public class ClientController {
 
     private static final String EXIT = "exit";
-    private static final String STATUS = "status";
+    private static final String PRESENCE = "presence";
 
     private Bot server;
-    private Client model;
+    private Client clientModel;
     private ClientView view;
 
-    private Logger logger = new Logger();
+    private HistoryService historyService = new WriterHistoryService();
 
     public ClientController(Bot server, ClientView view, Client model) throws IOException {
         this.server = server;
         this.view = view;
-        this.model = model;
+        this.clientModel = model;
     }
 
     void initialize() throws IOException {
         connect(server);
-
-        logger.loadHistory();
         startConversation();
-
         disconnect(server);
-        logger.flush();
     }
 
     private void disconnect(Bot server) {
@@ -35,40 +31,43 @@ public class ClientController {
     }
 
     private void startConversation() {
-        view.show(model.getPresence());
+        view.show(historyService.loadHistory()); // can be deserialized
+        view.show(clientModel.getPresence());
 
-        /** Main Loop */
+        /* Main Loop */
         try (Scanner sc = new Scanner(System.in)) {
             String inputMessage;
             do {
-                view.printName(model.getUsername());
+                view.printName(clientModel.getUsername());
 
                 inputMessage = sc.next();
                 if (EXIT.equals(inputMessage)) {
                     break;
-                } else if (STATUS.equals(inputMessage)) {
+                } else if (PRESENCE.equals(inputMessage)) {
                     changePresence(sc);
-                    view.show(model.getPresence());
+                    view.show(clientModel.getPresence());
                     continue;
                 }
-                logger.logMessage(model.getUsername(), inputMessage);
+                historyService.logMessage(clientModel.getUsername(), inputMessage);
 
                 String answerMessage = send(inputMessage);
 
                 view.printAnswer(server.BOT_NAME, answerMessage);
-                logger.logMessage(server.BOT_NAME, answerMessage);
+                historyService.logMessage(server.BOT_NAME, answerMessage);
             } while (true);
+
+            historyService.flushHistory(); // can be serialized
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            model.serialize();
+            clientModel.serialize();
         }
     }
 
     private void changePresence(Scanner sc) {
         view.changePresence();
         ClientPresence clientPresence = ClientPresence.values()[sc.nextInt()];
-        model.setPresence(clientPresence);
+        clientModel.setPresence(clientPresence);
     }
 
     private String send(String message) {

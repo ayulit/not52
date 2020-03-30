@@ -20,6 +20,12 @@ public class ClientView {
         System.out.println(" - type 'presence' to change presence");
     }
 
+    public void show(History history) {
+        for (String line: history.getLines()) {
+            System.out.println(line);
+        }
+    }
+
     public void printName(String username) {
         System.out.print(username + ": ");
     }
