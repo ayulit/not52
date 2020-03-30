@@ -11,9 +11,9 @@ import java.io.Serializable;
 
 public class Client implements Serializable {
     private static final String USER = "YOU";
-    private String filename = "status.ser";
+    private String filename = "presence.ser";
 
-    private ClientStatus status = ClientStatus.ONLINE;
+    private ClientPresence presence = ClientPresence.ONLINE;
     private String username = USER;
 
     public Client() {
@@ -26,7 +26,7 @@ public class Client implements Serializable {
                  ObjectInputStream in = new ObjectInputStream(fos)) {
                 client = (Client) in.readObject();
 
-                this.status = client.getStatus();
+                this.presence = client.getPresence();
 
             } catch (ClassNotFoundException | IOException e) {
                 e.printStackTrace();
@@ -34,11 +34,11 @@ public class Client implements Serializable {
         }
     }
 
-    public ClientStatus getStatus() {
-        return status;
+    public ClientPresence getPresence() {
+        return presence;
     }
-    public void setStatus(ClientStatus status) {
-        this.status = status;
+    public void setPresence(ClientPresence presence) {
+        this.presence = presence;
     }
     public String getUsername() {
         return username;

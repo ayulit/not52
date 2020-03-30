@@ -13,11 +13,11 @@ public class ClientView {
                     .withLocale(Locale.US)
                     .withZone(ZoneId.systemDefault());
 
-    void show(ClientStatus status) {
-        System.out.println("Client's status: " + status);
+    void show(ClientPresence presence) {
+        System.out.println("Client's presence: " + presence);
         System.out.println("Please enter a word.");
         System.out.println(" - type 'exit' for exit");
-        System.out.println(" - type 'status' to change status");
+        System.out.println(" - type 'presence' to change presence");
     }
 
     public void printName(String username) {
@@ -29,8 +29,8 @@ public class ClientView {
         System.out.println(answer + " [" + dateTimeFormatter.format(Instant.now()) + "]");
     }
 
-    public void changeStatus() {
-        System.out.println("Please, select status:");
+    public void changePresence() {
+        System.out.println("Please, select presence:");
         System.out.println("    0 - Online");
         System.out.println("    1 - Away");
         System.out.println("    2 - Busy");

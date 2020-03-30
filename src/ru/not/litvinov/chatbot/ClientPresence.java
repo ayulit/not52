@@ -1,5 +1,5 @@
 package ru.not.litvinov.chatbot;
 
-public enum ClientStatus {
+public enum ClientPresence {
     ONLINE, AWAY, BUSY
 }

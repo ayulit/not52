@@ -35,7 +35,7 @@ public class ClientController {
     }
 
     private void startConversation() {
-        view.show(model.getStatus());
+        view.show(model.getPresence());
 
         /** Main Loop */
         try (Scanner sc = new Scanner(System.in)) {
@@ -47,8 +47,8 @@ public class ClientController {
                 if (EXIT.equals(inputMessage)) {
                     break;
                 } else if (STATUS.equals(inputMessage)) {
-                    changeStatus(sc);
-                    view.show(model.getStatus());
+                    changePresence(sc);
+                    view.show(model.getPresence());
                     continue;
                 }
                 logger.logMessage(model.getUsername(), inputMessage);
@@ -65,10 +65,10 @@ public class ClientController {
         }
     }
 
-    private void changeStatus(Scanner sc) {
-        view.changeStatus();
-        ClientStatus clientStatus = ClientStatus.values()[sc.nextInt()];
-        model.setStatus(clientStatus);
+    private void changePresence(Scanner sc) {
+        view.changePresence();
+        ClientPresence clientPresence = ClientPresence.values()[sc.nextInt()];
+        model.setPresence(clientPresence);
     }
 
     private String send(String message) {
