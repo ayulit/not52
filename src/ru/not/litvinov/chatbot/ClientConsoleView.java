@@ -6,35 +6,40 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
-public class ClientConsoleView {
+public class ClientConsoleView implements ClientView {
 
     private DateTimeFormatter dateTimeFormatter =
             DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
                     .withLocale(Locale.US)
                     .withZone(ZoneId.systemDefault());
 
-    void show(ClientPresence presence) {
+    @Override
+    public void show(ClientPresence presence) {
         System.out.println("Client's presence: " + presence);
         System.out.println("Please enter a word.");
         System.out.println(" - type 'exit' for exit");
         System.out.println(" - type 'presence' to change presence");
     }
 
+    @Override
     public void show(History history) {
         for (String line: history.getLines()) {
             System.out.println(line);
         }
     }
 
-    public void printName(String username) {
+    @Override
+    public void showName(String username) {
         System.out.print(username + ": ");
     }
 
-    public void printAnswer(String name, String answer) {
-        printName(name);
+    @Override
+    public void showAnswer(String name, String answer) {
+        showName(name);
         System.out.println(answer + " [" + dateTimeFormatter.format(Instant.now()) + "]");
     }
 
+    @Override
     public void changePresence() {
         System.out.println("Please, select presence:");
         System.out.println("    0 - Online");

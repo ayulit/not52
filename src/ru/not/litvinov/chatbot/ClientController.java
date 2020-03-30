@@ -10,13 +10,13 @@ public class ClientController {
 
     private Bot server;
     private Client clientModel;
-    private ClientConsoleView view;
+    private ClientView clientView;
 
     private HistoryService historyService = new WriterHistoryService();
 
-    public ClientController(Bot server, ClientConsoleView view, Client model) throws IOException {
+    public ClientController(Bot server, ClientView clientView, Client model) throws IOException {
         this.server = server;
-        this.view = view;
+        this.clientView = clientView;
         this.clientModel = model;
     }
 
@@ -31,28 +31,28 @@ public class ClientController {
     }
 
     private void startConversation() {
-        view.show(historyService.loadHistory()); // can be deserialized
-        view.show(clientModel.getPresence());
+        clientView.show(historyService.loadHistory()); // can be deserialized
+        clientView.show(clientModel.getPresence());
 
         /* Main Loop */
         try (Scanner sc = new Scanner(System.in)) {
             String inputMessage;
             do {
-                view.printName(clientModel.getUsername());
+                clientView.showName(clientModel.getUsername());
 
                 inputMessage = sc.next();
                 if (EXIT.equals(inputMessage)) {
                     break;
                 } else if (PRESENCE.equals(inputMessage)) {
                     changePresence(sc);
-                    view.show(clientModel.getPresence());
+                    clientView.show(clientModel.getPresence());
                     continue;
                 }
                 historyService.logMessage(clientModel.getUsername(), inputMessage);
 
                 String answerMessage = send(inputMessage);
 
-                view.printAnswer(server.BOT_NAME, answerMessage);
+                clientView.showAnswer(server.BOT_NAME, answerMessage);
                 historyService.logMessage(server.BOT_NAME, answerMessage);
             } while (true);
 
@@ -65,7 +65,7 @@ public class ClientController {
     }
 
     private void changePresence(Scanner sc) {
-        view.changePresence();
+        clientView.changePresence();
         ClientPresence clientPresence = ClientPresence.values()[sc.nextInt()];
         clientModel.setPresence(clientPresence);
     }
