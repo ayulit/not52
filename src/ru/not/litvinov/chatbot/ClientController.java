@@ -10,11 +10,11 @@ public class ClientController {
 
     private Bot server;
     private Client clientModel;
-    private ClientView view;
+    private ClientConsoleView view;
 
     private HistoryService historyService = new WriterHistoryService();
 
-    public ClientController(Bot server, ClientView view, Client model) throws IOException {
+    public ClientController(Bot server, ClientConsoleView view, Client model) throws IOException {
         this.server = server;
         this.view = view;
         this.clientModel = model;

@@ -6,7 +6,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.FormatStyle;
 import java.util.Locale;
 
-public class ClientView {
+public class ClientConsoleView {
 
     private DateTimeFormatter dateTimeFormatter =
             DateTimeFormatter.ofLocalizedDateTime(FormatStyle.SHORT)
