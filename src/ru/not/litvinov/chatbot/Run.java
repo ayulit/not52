@@ -5,8 +5,7 @@ import java.io.IOException;
 
 public class Run {
     public static void main(String[] args) throws IOException {
-        Bot server = new Bot();
-        ClientController clientController = new ClientController(server, new ClientConsoleView(), new Client());
+        ClientController clientController = new ClientController(new Bot(), new ClientConsoleView(), new Client());
         clientController.initialize();
     }
 }
