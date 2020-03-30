@@ -1,4 +1,7 @@
-package ru.not.litvinov.chatbot;
+package ru.not.litvinov.chatbot.client.view;
+
+import ru.not.litvinov.chatbot.client.ClientPresence;
+import ru.not.litvinov.chatbot.client.history.History;
 
 import java.time.Instant;
 import java.time.ZoneId;

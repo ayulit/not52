@@ -1,4 +1,4 @@
-package ru.not.litvinov.chatbot;
+package ru.not.litvinov.chatbot.client.history;
 
 import java.util.LinkedList;
 import java.util.List;

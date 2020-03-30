@@ -1,6 +1,10 @@
 package ru.not.litvinov.chatbot;
 
 
+import ru.not.litvinov.chatbot.client.Client;
+import ru.not.litvinov.chatbot.client.view.ClientConsoleView;
+import ru.not.litvinov.chatbot.client.ClientController;
+
 import java.io.IOException;
 
 public class Run {

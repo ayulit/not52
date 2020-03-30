@@ -1,4 +1,9 @@
-package ru.not.litvinov.chatbot;
+package ru.not.litvinov.chatbot.client;
+
+import ru.not.litvinov.chatbot.Bot;
+import ru.not.litvinov.chatbot.client.history.HistoryService;
+import ru.not.litvinov.chatbot.client.history.WriterHistoryService;
+import ru.not.litvinov.chatbot.client.view.ClientView;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -20,7 +25,7 @@ public class ClientController {
         this.clientModel = model;
     }
 
-    void initialize() throws IOException {
+    public void initialize() throws IOException {
         connect(server);
         startConversation();
         disconnect(server);

@@ -1,4 +1,4 @@
-package ru.not.litvinov.chatbot;
+package ru.not.litvinov.chatbot.client;
 
 
 import java.io.File;
