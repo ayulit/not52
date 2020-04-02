@@ -1,41 +1,23 @@
 package ru.not.litvinov.lec07.apricot;
 
-import ru.not.litvinov.lec07.apricot.fruits.Fruit;
-import ru.not.litvinov.lec07.apricot.fruits.Orange;
-import ru.not.litvinov.lec07.apricot.vegs.Tomato;
-import ru.not.litvinov.lec07.apricot.vegs.Veg;
-
 import java.util.List;
+import java.util.Random;
 
-public class Warehouse {
+public class Warehouse<T extends Plant> {
 
-    WarehouseType type;
+    private PlantGenerator plantGenerator;
+    private boolean isLoadMore = true;
+    private Random random = new Random(System.currentTimeMillis());
 
-    public Warehouse(WarehouseType type) {
-        this.type = type;
+    public Warehouse(PlantGenerator plantGenerator) {
+        this.plantGenerator = plantGenerator;
     }
 
-    public void loadCargo(List<? extends Plant> cargo) {
-        switch (type) {
-            case VEG:
-                while (cargo.size() <= 10) {
-                    cargo.add(generateVeg());
-                }
-                break;
-            case FRUIT:
-                while (cargo.size() <= 10) {
-                    cargo.add(generateFruit());
-                }
-                break;
+    public void loadCargo(List<T> cargo) {
+        while (cargo.size() <= 10 || isLoadMore) {
+            cargo.add((T) plantGenerator.generatePlant());
+            isLoadMore = random.nextBoolean();
         }
-    }
-
-    private <K extends Veg> K generateVeg() {
-        return (K) new Tomato();
-    }
-
-    private <V extends Fruit> V generateFruit() {
-        return (V) new Orange();
     }
 }
 
