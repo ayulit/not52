@@ -7,6 +7,7 @@ import ru.not.litvinov.lec07.apricot.warehouse.VegFactory;
 import ru.not.litvinov.lec07.apricot.warehouse.Warehouse;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 public class ApricotMain {
@@ -14,22 +15,17 @@ public class ApricotMain {
         List<Veg> vegCargo = new ArrayList<>(10);
         List<Fruit> fruitCargo = new ArrayList<>(10);
 
-        Warehouse<Fruit> fruitWarehouseA = new Warehouse<>(new FruitFactory());
-        Warehouse<Fruit> fruitWarehouseB = new Warehouse<>(new FruitFactory());
-        Warehouse<Fruit> fruitWarehouseC = new Warehouse<>(new FruitFactory());
-        Warehouse<Veg> vegWarehouseA = new Warehouse<>(new VegFactory());
-        Warehouse<Veg> vegWarehouseB = new Warehouse<>(new VegFactory());
-        Warehouse<Veg> vegWarehouseC = new Warehouse<>(new VegFactory());
+        List<Warehouse<Fruit>> fruitWhs = new LinkedList<>();
+        List<Warehouse<Veg>> vegWhs = new LinkedList<>();
+        for (int i = 0; i < 10; i++) {
+            fruitWhs.add(new Warehouse<>(new FruitFactory()));
+            vegWhs.add(new Warehouse<>(new VegFactory()));
+        }
 
-        fruitWarehouseA.loadCargo(fruitCargo);
-        fruitWarehouseB.loadCargo(fruitCargo);
-        fruitWarehouseC.loadCargo(fruitCargo);
-
-        vegWarehouseA.loadCargo(vegCargo);
-        vegWarehouseB.loadCargo(vegCargo);
-        vegWarehouseC.loadCargo(vegCargo);
-
-//        vegWarehouseA.loadCargo(fruitCargo); // truly won't work
+        for (int i = 0; i < 10; i++) {
+            fruitWhs.get(i).loadCargo(fruitCargo);
+            vegWhs.get(i).loadCargo(vegCargo);
+        }
 
         Shop shop = new Shop();
         shop.printCargo(vegCargo);

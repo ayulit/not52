@@ -16,7 +16,7 @@ public class Warehouse<T extends Plant> {
     }
 
     public void loadCargo(List<T> cargo) {
-        while (cargo.size() <= 10 || isLoadMore) {
+        while (cargo.size() < 10 && isLoadMore) {
             cargo.add((T) plantFactory.generatePlant());
             isLoadMore = random.nextBoolean();
         }

@@ -4,8 +4,10 @@ import java.util.List;
 
 public class Shop {
     public <P extends Plant> void printCargo(List<P> cargo) {
+        int i = 1;
         for (P plant: cargo) {
-            System.out.println(plant.getName());
+            System.out.println(i++ + ". " + plant.getName());
         }
+        System.out.println();
     }
 }
