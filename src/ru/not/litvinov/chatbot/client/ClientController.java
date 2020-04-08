@@ -18,14 +18,15 @@ public class ClientController {
     private ClientView clientView;
 
     private HistoryService historyService = new WriterHistoryService();
+    private ClientService clientService = new ClientServiceImpl();
 
-    public ClientController(Bot server, ClientView clientView, Client model) throws IOException {
+    public ClientController(Bot server, ClientView clientView) throws IOException {
         this.server = server;
         this.clientView = clientView;
-        this.clientModel = model;
+        this.clientModel = clientService.getModel();
     }
 
-    public void initialize() throws IOException {
+    public void initialize() {
         connect(server);
         startConversation();
         disconnect(server);
@@ -65,7 +66,7 @@ public class ClientController {
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
-            clientModel.serialize();
+            clientService.saveModel(clientModel);
         }
     }
 
