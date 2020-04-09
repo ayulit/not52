@@ -1,4 +1,4 @@
-package ru.not.litvinov.chatbot.client;
+package ru.not.litvinov.chatbot.client.model;
 
 import java.io.Serializable;
 

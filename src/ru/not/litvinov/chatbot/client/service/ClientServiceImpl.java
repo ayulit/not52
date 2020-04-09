@@ -1,4 +1,6 @@
-package ru.not.litvinov.chatbot.client;
+package ru.not.litvinov.chatbot.client.service;
+
+import ru.not.litvinov.chatbot.client.model.Client;
 
 import java.io.File;
 import java.io.FileInputStream;
