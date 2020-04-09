@@ -1,4 +1,4 @@
-package ru.not.litvinov.chatbot.client.history;
+package ru.not.litvinov.chatbot.history;
 
 import java.io.IOException;
 

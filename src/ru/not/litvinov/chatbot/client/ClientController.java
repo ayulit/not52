@@ -1,8 +1,8 @@
 package ru.not.litvinov.chatbot.client;
 
 import ru.not.litvinov.chatbot.Bot;
-import ru.not.litvinov.chatbot.client.history.HistoryService;
-import ru.not.litvinov.chatbot.client.history.WriterHistoryService;
+import ru.not.litvinov.chatbot.history.HistoryService;
+import ru.not.litvinov.chatbot.history.WriterHistoryService;
 import ru.not.litvinov.chatbot.client.model.Client;
 import ru.not.litvinov.chatbot.client.model.ClientPresence;
 import ru.not.litvinov.chatbot.client.service.ClientService;

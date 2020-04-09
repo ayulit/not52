@@ -1,7 +1,7 @@
 package ru.not.litvinov.chatbot.client.view;
 
 import ru.not.litvinov.chatbot.client.model.ClientPresence;
-import ru.not.litvinov.chatbot.client.history.History;
+import ru.not.litvinov.chatbot.history.History;
 
 public interface ClientView {
     void show(History history);
