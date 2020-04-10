@@ -6,11 +6,13 @@ import java.net.Socket;
 
 public class Client {
     public static void main(String[] args) {
-        Socket socket = null;
         try {
-            socket = new Socket("localhost", 3456); // connecting, tcp-handshake
+            Socket socket  = new Socket("localhost", 3456); // connecting, tcp-handshake
             InputStream inputStream = socket.getInputStream();
-            inputStream.read(); // ready to read, read
+
+            System.out.println("Read: " + inputStream.read()); // ready to read, read
+
+            socket.close(); // don't forget to close socket
         } catch (IOException e) {
             e.printStackTrace();
         }
