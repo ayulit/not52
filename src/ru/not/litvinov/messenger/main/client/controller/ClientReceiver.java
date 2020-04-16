@@ -4,9 +4,16 @@ import java.io.DataInputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.concurrent.BlockingQueue;
 
 public class ClientReceiver extends Thread {
     private static final int RECEIVING_PORT = 3457;
+
+    BlockingQueue<String> queue;
+
+    public ClientReceiver(BlockingQueue<String> queue) {
+        this.queue = queue;
+    }
 
     @Override
     public void run() {
@@ -19,6 +26,12 @@ public class ClientReceiver extends Thread {
 
             // receive messages
             System.out.println(in.readUTF());
+
+            while (true) {
+                if(in.available() !=0) {
+                    queue.add(in.readUTF());
+                }
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
