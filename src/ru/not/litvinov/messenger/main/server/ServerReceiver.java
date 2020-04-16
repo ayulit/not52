@@ -7,7 +7,7 @@ import java.net.Socket;
 import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class SeverReceiver extends Thread {
+public class ServerReceiver extends Thread {
     private static final int RECEIVING_PORT = 3456;
     private static final int QUEUE_SIZE = 1000;
     BlockingQueue<String> inQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
