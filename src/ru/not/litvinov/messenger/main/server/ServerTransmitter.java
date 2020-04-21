@@ -8,17 +8,19 @@ import java.util.concurrent.BlockingQueue;
 
 public class ServerTransmitter extends Thread {
     private static final String CLIENT_MESSENGER_HOST = "localhost";
-    private static final int TRANSMISSION_PORT = 3457;
 
     private BlockingQueue<String> queue;
 
-    public ServerTransmitter(BlockingQueue<String> queue) {
+    private int transmitPort;
+
+    public ServerTransmitter(int transmitPort, BlockingQueue<String> queue) {
+        this.transmitPort = transmitPort;
         this.queue = queue;
     }
 
     @Override
     public void run() {
-        try(Socket clientSocket = new Socket(CLIENT_MESSENGER_HOST, TRANSMISSION_PORT);
+        try(Socket clientSocket = new Socket(CLIENT_MESSENGER_HOST, transmitPort);
             DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream())) {
 
             out.writeUTF("history");
@@ -29,10 +31,8 @@ public class ServerTransmitter extends Thread {
 
             while (true) {
                 if(!queue.isEmpty()) {
-                    String messageFromReceiver = queue.take();
-                    String replyMessage = new StringBuilder(messageFromReceiver).reverse().toString();
-
-                    out.writeUTF(replyMessage);
+                    String receivedMessage = queue.take();
+                    out.writeUTF(receivedMessage);
                     out.flush();
                 }
             }

@@ -8,17 +8,18 @@ import java.util.concurrent.BlockingQueue;
 
 public class ClientTransmitter extends Thread {
     private static final String SERVER_MESSENGER_HOST = "localhost";
-    private static final int TRANSMISSION_PORT = 3456;
 
     private BlockingQueue<String> queue;
+    private int transmitPort;
 
-    public ClientTransmitter(BlockingQueue<String> queue) {
+    public ClientTransmitter(BlockingQueue<String> queue, int transmitPort) {
         this.queue = queue;
+        this.transmitPort = transmitPort;
     }
 
     @Override
     public void run() {
-        try(Socket clientSocket = new Socket(SERVER_MESSENGER_HOST, TRANSMISSION_PORT);
+        try(Socket clientSocket = new Socket(SERVER_MESSENGER_HOST, transmitPort);
             DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream())) {
 
             while (true) {

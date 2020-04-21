@@ -12,9 +12,17 @@ public class ClientController {
     BlockingQueue<String> outQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
     BlockingQueue<String> inQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
 
+    private int transmitPort;
+    private int receivePort;
+
+    public ClientController(int transmitPort, int receivePort) {
+        this.transmitPort = transmitPort;
+        this.receivePort = receivePort;
+    }
+
     public void initialize() {
-        ClientReceiver receiver = new ClientReceiver(inQueue);
-        ClientTransmitter transmitter = new ClientTransmitter(outQueue);
+        ClientReceiver receiver = new ClientReceiver(inQueue, receivePort);
+        ClientTransmitter transmitter = new ClientTransmitter(outQueue, transmitPort);
 
         receiver.start();
         transmitter.start();
@@ -23,7 +31,6 @@ public class ClientController {
         try (Scanner sc = new Scanner(System.in)) {
             String inputMessage;
             do {
-                System.out.print("> ");
                 inputMessage = sc.next();
 
                 outQueue.put(inputMessage);
@@ -31,9 +38,6 @@ public class ClientController {
                 if (EXIT.equals(inputMessage)) {
                     break;
                 }
-
-                System.out.println(inQueue.take());
-
             } while (true);
         } catch (InterruptedException e) {
             e.printStackTrace();

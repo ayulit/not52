@@ -7,17 +7,18 @@ import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 
 public class ClientReceiver extends Thread {
-    private static final int RECEIVING_PORT = 3457;
 
-    BlockingQueue<String> queue;
+//    BlockingQueue<String> queue;
+    private int receivePort;
 
-    public ClientReceiver(BlockingQueue<String> queue) {
-        this.queue = queue;
+    public ClientReceiver(BlockingQueue<String> queue, int receivePort) {
+//        this.queue = queue;
+        this.receivePort = receivePort;
     }
 
     @Override
     public void run() {
-        try(ServerSocket serverSocket = new ServerSocket(RECEIVING_PORT);
+        try(ServerSocket serverSocket = new ServerSocket(receivePort);
             Socket clientSocket = serverSocket.accept();
             DataInputStream in = new DataInputStream(clientSocket.getInputStream())) {
 
@@ -29,7 +30,10 @@ public class ClientReceiver extends Thread {
 
             while (true) {
                 if(in.available() !=0) {
-                    queue.add(in.readUTF());
+//                    queue.add(in.readUTF());
+
+                    // TODO: from Russia with love to view
+                    System.out.println(in.readUTF());
                 }
             }
 
