@@ -14,42 +14,40 @@ public class ClientConsoleView extends Thread {
         this.outQueue = outQueue;
     }
 
-    class ClientConsoleManager extends Thread {
+    class ClientConsoleWriter extends Thread {
         @Override
         public void run() {
-            /* Main Loop */
-            try (Scanner sc = new Scanner(System.in)) {
-                String inputMessage;
-                do {
-                    inputMessage = sc.next();
+            while (true) {
+                if(!inQueue.isEmpty()) {
+                    String receivedMessage = null;
 
-                    outQueue.put(inputMessage);
-
-//                if (EXIT.equals(inputMessage)) {
-//                    break;
-//                }
-                } while (true);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+                    try {
+                        receivedMessage = inQueue.take();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    System.out.println(receivedMessage);
+                }
             }
         }
     }
 
     public void draw() {
-        (new ClientConsoleManager()).start();
+        (new ClientConsoleWriter()).start();
+        /* Main Loop */
+        try (Scanner sc = new Scanner(System.in)) {
+            String inputMessage;
+            do {
+                inputMessage = sc.next();
 
-        while (true) {
-            if(!inQueue.isEmpty()) {
-                String receivedMessage = null;
+                outQueue.put(inputMessage);
 
-                try {
-                    receivedMessage = inQueue.take();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-                System.out.println(receivedMessage);
-            }
+//                if (EXIT.equals(inputMessage)) {
+//                    break;
+//                }
+            } while (true);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
     }
 }
