@@ -3,10 +3,9 @@ package ru.not.litvinov.messenger.main.client.controller;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 
-public class ClientTransmitter extends Thread {
+public class ClientTransmitter {
     private static final String SERVER_MESSENGER_HOST = "localhost";
 
     private BlockingQueue<String> queue;
@@ -17,8 +16,7 @@ public class ClientTransmitter extends Thread {
         this.transmitPort = transmitPort;
     }
 
-    @Override
-    public void run() {
+    public void initialize() {
         try(Socket clientSocket = new Socket(SERVER_MESSENGER_HOST, transmitPort);
             DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream())) {
 
@@ -28,12 +26,7 @@ public class ClientTransmitter extends Thread {
                     out.flush();
                 }
             }
-
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (InterruptedException | IOException e) {
             e.printStackTrace();
         }
     }

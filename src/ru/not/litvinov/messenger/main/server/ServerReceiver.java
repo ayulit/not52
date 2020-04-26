@@ -22,7 +22,6 @@ public class ServerReceiver extends Thread {
         this.friendsQueue = friendsQueue;
     }
 
-
     @Override
     public void run() {
         try(ServerSocket serverSocket = new ServerSocket(receivePort);
@@ -41,7 +40,6 @@ public class ServerReceiver extends Thread {
                     friendsQueue.add(messageFromClient);
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }

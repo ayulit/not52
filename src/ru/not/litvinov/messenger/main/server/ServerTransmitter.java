@@ -3,7 +3,6 @@ package ru.not.litvinov.messenger.main.server;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.concurrent.BlockingQueue;
 
 public class ServerTransmitter extends Thread {
@@ -37,11 +36,7 @@ public class ServerTransmitter extends Thread {
                 }
             }
 
-        } catch (UnknownHostException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }
     }

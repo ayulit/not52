@@ -1,46 +1,29 @@
 package ru.not.litvinov.messenger.main.client.controller;
 
-import java.util.Scanner;
-import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 
-public class ClientController {
+public class ClientController extends Thread {
 
-    private static final String EXIT = "exit";
-    private static final int QUEUE_SIZE = 1000;
-
-    BlockingQueue<String> outQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
-    BlockingQueue<String> inQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
+    private BlockingQueue<String> inQueue;
+    private BlockingQueue<String> outQueue;
 
     private int transmitPort;
     private int receivePort;
 
-    public ClientController(int transmitPort, int receivePort) {
+    public ClientController(int transmitPort, int receivePort, BlockingQueue<String> inQueue, BlockingQueue<String> outQueue) {
         this.transmitPort = transmitPort;
         this.receivePort = receivePort;
+        this.inQueue = inQueue;
+        this.outQueue = outQueue;
     }
 
-    public void initialize() {
+    @Override
+    public void run() {
         ClientReceiver receiver = new ClientReceiver(inQueue, receivePort);
         ClientTransmitter transmitter = new ClientTransmitter(outQueue, transmitPort);
 
         receiver.start();
-        transmitter.start();
 
-        /* Main Loop */
-        try (Scanner sc = new Scanner(System.in)) {
-            String inputMessage;
-            do {
-                inputMessage = sc.next();
-
-                outQueue.put(inputMessage);
-
-                if (EXIT.equals(inputMessage)) {
-                    break;
-                }
-            } while (true);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        transmitter.initialize();
     }
 }

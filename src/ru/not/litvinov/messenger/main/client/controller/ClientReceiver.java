@@ -8,11 +8,11 @@ import java.util.concurrent.BlockingQueue;
 
 public class ClientReceiver extends Thread {
 
-//    BlockingQueue<String> queue;
+    private BlockingQueue<String> queue;
     private int receivePort;
 
     public ClientReceiver(BlockingQueue<String> queue, int receivePort) {
-//        this.queue = queue;
+        this.queue = queue;
         this.receivePort = receivePort;
     }
 
@@ -30,13 +30,10 @@ public class ClientReceiver extends Thread {
 
             while (true) {
                 if(in.available() !=0) {
-//                    queue.add(in.readUTF());
-
-                    // TODO: from Russia with love to view
-                    System.out.println(in.readUTF());
+                    // from receiver to view
+                    queue.add(in.readUTF());
                 }
             }
-
         } catch (IOException e) {
             e.printStackTrace();
         }
