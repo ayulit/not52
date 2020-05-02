@@ -21,14 +21,17 @@ public class ClientMessenger {
         this.receivePort = receivePort;
     }
 
-    public void init() {
-        // View must be in the main thread
-        ClientConsoleView view = new ClientConsoleView(inQueue, outQueue);
-
+    public void run() {
         // Controller in another thread
         ClientController clientController = new ClientController(transmitPort, receivePort, inQueue, outQueue);
         clientController.start();
 
+        // View must be in the main thread
+        ClientConsoleView view = new ClientConsoleView(inQueue, outQueue);
         view.draw();
+
+        System.out.println("ClientConsoleView closed.");
+
+        clientController.interrupt();
     }
 }

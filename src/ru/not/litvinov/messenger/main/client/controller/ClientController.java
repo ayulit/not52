@@ -19,11 +19,23 @@ public class ClientController extends Thread {
 
     @Override
     public void run() {
-        ClientReceiver receiver = new ClientReceiver(inQueue, receivePort);
-        ClientTransmitter transmitter = new ClientTransmitter(outQueue, transmitPort);
-
+        ClientReceiver receiver = new ClientReceiver(inQueue, receivePort); // 👂
         receiver.start();
 
-        transmitter.initialize();
+        ClientTransmitter transmitter = new ClientTransmitter(outQueue, transmitPort); // 📡
+
+        // TODO somehow fetch history
+
+        while (!Thread.interrupted()) {
+            // loop transmitting if present: as smth appears in the queue, open tcp connection
+            if(!outQueue.isEmpty()) {
+                transmitter.transmit();
+            }
+        }
+
+        // gently stop receiver
+        receiver.interrupt();
+
+        System.out.println("ClientController / ClientTransmitter closed.");
     }
 }

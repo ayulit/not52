@@ -17,10 +17,9 @@ public class ClientConsoleView extends Thread {
     class ClientConsoleWriter extends Thread {
         @Override
         public void run() {
-            while (true) {
+            while (!Thread.interrupted()) {
                 if(!inQueue.isEmpty()) {
                     String receivedMessage = null;
-
                     try {
                         receivedMessage = inQueue.take();
                     } catch (InterruptedException e) {
@@ -29,25 +28,28 @@ public class ClientConsoleView extends Thread {
                     System.out.println(receivedMessage);
                 }
             }
+            System.out.println("ClientConsoleWriter closed.");
         }
     }
 
     public void draw() {
-        (new ClientConsoleWriter()).start();
+        ClientConsoleWriter clientConsoleWriter = new ClientConsoleWriter();
+        clientConsoleWriter.start();
+
         /* Main Loop */
         try (Scanner sc = new Scanner(System.in)) {
             String inputMessage;
             do {
                 inputMessage = sc.next();
-
+                if (EXIT.equals(inputMessage)) {
+                    break;
+                }
                 outQueue.put(inputMessage);
-
-//                if (EXIT.equals(inputMessage)) {
-//                    break;
-//                }
             } while (true);
         } catch (InterruptedException e) {
             e.printStackTrace();
+        } finally {
+            clientConsoleWriter.interrupt();
         }
     }
 }

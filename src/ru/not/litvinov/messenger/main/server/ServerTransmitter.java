@@ -2,6 +2,7 @@ package ru.not.litvinov.messenger.main.server;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 import java.util.concurrent.BlockingQueue;
 
@@ -19,25 +20,25 @@ public class ServerTransmitter extends Thread {
 
     @Override
     public void run() {
-        try(Socket clientSocket = new Socket(CLIENT_MESSENGER_HOST, transmitPort);
-            DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream())) {
+        while(true) {
+            if (!queue.isEmpty()) {
+                try (Socket clientSocket = new Socket(CLIENT_MESSENGER_HOST, transmitPort);
+                     DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream())) {
 
-            out.writeUTF("history");
-            out.flush();
+                    while (!queue.isEmpty()) {
+                        String receivedMessage = queue.take();
 
-            out.writeUTF("messages");
-            out.flush();
+                        System.out.println("Sending ... " + receivedMessage);
 
-            while (true) {
-                if(!queue.isEmpty()) {
-                    String receivedMessage = queue.take();
-                    out.writeUTF(receivedMessage);
-                    out.flush();
+                        out.writeUTF(receivedMessage);
+                        out.flush();
+                    }
+                } catch (ConnectException e) {
+//                    System.out.println("Client unavailable.");
+                } catch (IOException | InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
-
-        } catch (IOException | InterruptedException e) {
-            e.printStackTrace();
         }
     }
 }
