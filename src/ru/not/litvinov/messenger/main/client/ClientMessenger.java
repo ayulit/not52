@@ -1,6 +1,7 @@
 package ru.not.litvinov.messenger.main.client;
 
 import ru.not.litvinov.messenger.main.client.controller.ClientController;
+import ru.not.litvinov.messenger.main.client.service.ClientHistoryService;
 import ru.not.litvinov.messenger.main.client.view.ClientConsoleView;
 
 import java.util.concurrent.ArrayBlockingQueue;
@@ -15,6 +16,8 @@ public class ClientMessenger {
     private BlockingQueue<String> inQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
     private BlockingQueue<String> outQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
 
+    private ClientHistoryService historyService = new ClientHistoryService();
+
     // FIXME port implement autoassignment mechanism
     public ClientMessenger(int transmitPort, int receivePort) {
         this.transmitPort = transmitPort;
@@ -23,7 +26,7 @@ public class ClientMessenger {
 
     public void run() {
         // Controller in another thread
-        ClientController clientController = new ClientController(transmitPort, receivePort, inQueue, outQueue);
+        ClientController clientController = new ClientController(transmitPort, receivePort, inQueue, outQueue, historyService);
         clientController.start();
 
         // View must be in the main thread

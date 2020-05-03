@@ -1,5 +1,7 @@
 package ru.not.litvinov.messenger.main.client.controller;
 
+import ru.not.litvinov.messenger.main.client.service.ClientHistoryService;
+
 import java.io.DataInputStream;
 import java.io.EOFException;
 import java.io.IOException;
@@ -13,9 +15,12 @@ public class ClientReceiver extends Thread {
     private BlockingQueue<String> queue;
     private int receivePort;
 
-    public ClientReceiver(BlockingQueue<String> queue, int receivePort) {
+    private ClientHistoryService historyService;
+
+    public ClientReceiver(BlockingQueue<String> queue, int receivePort, ClientHistoryService historyService) {
         this.queue = queue;
         this.receivePort = receivePort;
+        this.historyService = historyService;
     }
 
     @Override
@@ -30,6 +35,7 @@ public class ClientReceiver extends Thread {
                     while (true) {
                         String receivedMessage = in.readUTF();
                         queue.add(receivedMessage);
+//                        historyService.save(receivedMessage);
                     }
                 } catch (EOFException e) {
 //                    System.out.println("No messages for now");

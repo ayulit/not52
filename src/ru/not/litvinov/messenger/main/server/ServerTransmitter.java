@@ -26,12 +26,16 @@ public class ServerTransmitter extends Thread {
                      DataOutputStream out = new DataOutputStream(clientSocket.getOutputStream())) {
 
                     while (!queue.isEmpty()) {
-                        String receivedMessage = queue.take();
+                        String messageFromFriend = queue.take();
 
-                        System.out.println("Sending ... " + receivedMessage);
+                        System.out.println("Sending ... " + messageFromFriend);
 
-                        out.writeUTF(receivedMessage);
+                        out.writeUTF(messageFromFriend);
                         out.flush();
+
+                        // TODO historystamp
+//                        historyService.save(userid, messageFromFriend);
+
                     }
                 } catch (ConnectException e) {
 //                    System.out.println("Client unavailable.");

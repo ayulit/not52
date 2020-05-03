@@ -17,6 +17,10 @@ public class ClientConsoleView extends Thread {
     class ClientConsoleWriter extends Thread {
         @Override
         public void run() {
+
+            // TODO print history (already synchronized at this point)
+//            System.out.println(historyService.getHistory());
+
             while (!Thread.interrupted()) {
                 if(!inQueue.isEmpty()) {
                     String receivedMessage = null;

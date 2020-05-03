@@ -41,6 +41,9 @@ public class ServerReceiver extends Thread {
                     String messageFromClient = in.readUTF();
                     System.out.println("Received: " + messageFromClient);
                     friendsQueue.add(messageFromClient);
+
+                    // TODO historystamp
+//                    historyService.save(userid, messageFromClient);
                 }
             } catch (EOFException e) {
 //                System.out.println("No messages for now.");

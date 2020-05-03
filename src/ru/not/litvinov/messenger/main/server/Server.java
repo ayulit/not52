@@ -14,6 +14,10 @@ public class Server {
         BlockingQueue<String> queueForCarol = new ArrayBlockingQueue<>(QUEUE_SIZE);
 
         ServerReceiver annaReceiver = new ServerReceiver(3456, 3457, queueForAnna, queueForCarol);  // 👂
+
+
+
+
         ServerReceiver carolReceiver = new ServerReceiver(3556, 3557, queueForCarol, queueForAnna); // 👂
         annaReceiver.start();
         carolReceiver.start();
