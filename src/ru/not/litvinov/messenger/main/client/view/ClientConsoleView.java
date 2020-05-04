@@ -1,24 +1,25 @@
 package ru.not.litvinov.messenger.main.client.view;
 
+import ru.not.litvinov.messenger.main.client.controller.ClientReceiver;
+import ru.not.litvinov.messenger.main.client.controller.ClientTransmitter;
 import ru.not.litvinov.messenger.main.client.helper.ClientHelper;
 import ru.not.litvinov.messenger.main.client.helper.Clients;
 import ru.not.litvinov.messenger.main.shared.model.Message;
 
+import java.util.List;
 import java.util.Scanner;
-import java.util.concurrent.BlockingQueue;
 
-public class ClientConsoleView extends Thread {
+public class ClientConsoleView implements ClientView {
     private static final String EXIT = "exit";
-
-    private BlockingQueue<Message> inQueue;
-    private BlockingQueue<Message> outQueue;
 
     private Clients client;
 
-    public ClientConsoleView(BlockingQueue<Message> inQueue, BlockingQueue<Message> outQueue, Clients client) {
-        this.inQueue = inQueue;
-        this.outQueue = outQueue;
+    private ClientTransmitter clientTransmitter = new ClientTransmitter();
+    private ClientReceiver clientReceiver;
+
+    public ClientConsoleView(Clients client) {
         this.client = client;
+        this.clientReceiver = new ClientReceiver(ClientHelper.getPort(client));
     }
 
     class ClientConsoleWriter extends Thread {
@@ -29,20 +30,16 @@ public class ClientConsoleView extends Thread {
 //            System.out.println(historyService.getHistory());
 
             while (!Thread.interrupted()) {
-                if(!inQueue.isEmpty()) {
-                    Message receivedMessage = null;
-                    try {
-                        receivedMessage = inQueue.take();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-                    System.out.println(receivedMessage);
+                List<Message> receivedMessages = clientReceiver.receive();
+
+                if(!receivedMessages.isEmpty()) {
+                    receivedMessages.forEach(System.out::println);
                 }
             }
-            System.out.println("ClientConsoleWriter closed.");
         }
     }
 
+    @Override
     public void draw() {
         ClientConsoleWriter clientConsoleWriter = new ClientConsoleWriter();
         clientConsoleWriter.start();
@@ -52,7 +49,8 @@ public class ClientConsoleView extends Thread {
 
             // FIXME auth
             // loopsend
-            outQueue.put(new Message(client.getClientId(), client.getClientId(), "AUTH:username_pwd"));
+            Message message = new Message(client.getClientId(), client.getClientId(), "AUTH:username_pwd");
+            clientTransmitter.transmit(message);
 
             String inputMessage;
             do {
@@ -60,10 +58,11 @@ public class ClientConsoleView extends Thread {
                 if (EXIT.equals(inputMessage)) {
                     break;
                 }
-                outQueue.put(new Message(client.getClientId(), ClientHelper.getFriendId(client), inputMessage));
+                message = new Message(client.getClientId(), ClientHelper.getFriendId(client), inputMessage);
+
+                clientTransmitter.transmit(message);
+
             } while (true);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
         } finally {
             clientConsoleWriter.interrupt();
         }

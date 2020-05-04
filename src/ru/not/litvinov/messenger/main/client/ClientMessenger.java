@@ -1,39 +1,23 @@
 package ru.not.litvinov.messenger.main.client;
 
-import ru.not.litvinov.messenger.main.client.controller.ClientController;
 import ru.not.litvinov.messenger.main.client.helper.Clients;
 import ru.not.litvinov.messenger.main.client.service.ClientHistoryService;
 import ru.not.litvinov.messenger.main.client.view.ClientConsoleView;
-import ru.not.litvinov.messenger.main.shared.model.Message;
-
-import java.util.concurrent.ArrayBlockingQueue;
-import java.util.concurrent.BlockingQueue;
+import ru.not.litvinov.messenger.main.client.view.ClientView;
 
 public class ClientMessenger {
-    private static final int QUEUE_SIZE = 1000;
-
-    private Clients clientId;
-
-    private BlockingQueue<Message> inQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
-    private BlockingQueue<Message> outQueue = new ArrayBlockingQueue<>(QUEUE_SIZE);
+    private Clients client;
 
     private ClientHistoryService historyService = new ClientHistoryService();
 
-    public ClientMessenger(Clients clientId) {
-        this.clientId = clientId;
+    public ClientMessenger(Clients client) {
+        this.client = client;
     }
 
-    public void run() {
-        // Controller in another thread
-        ClientController clientController = new ClientController(clientId, inQueue, outQueue, historyService);
-        clientController.start();
+    public void exec() {
+        ClientView view = new ClientConsoleView(client);
+        view.draw(); // blocking
 
-        // View must be in the main thread
-        ClientConsoleView view = new ClientConsoleView(inQueue, outQueue, clientId);
-        view.draw();
-
-        System.out.println("ClientConsoleView closed.");
-
-        clientController.interrupt();
+        System.out.println("Bye-bye...");
     }
 }
