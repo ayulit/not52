@@ -22,11 +22,15 @@ public class ServerHistoryService {
 
     public boolean saveForSender(Message message) {
         Integer senderId = message.getSenderId();
-        return getHistoryById(senderId).add(message);
+        return save(senderId, message);
     }
 
     public boolean saveForConsumer(Message message) {
         Integer consumerId = message.getConsumerId();
-        return getHistoryById(consumerId).add(message);
+        return save(consumerId, message);
+    }
+
+    private boolean save(Integer clientId, Message message) {
+        return getHistoryById(clientId).add(message);
     }
 }

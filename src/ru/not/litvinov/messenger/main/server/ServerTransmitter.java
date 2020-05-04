@@ -51,7 +51,7 @@ public class ServerTransmitter extends Thread {
             while (!queue.isEmpty()) {
                     Message messageFromFriend = queue.take();
 
-                    System.out.println("Sending ... " + messageFromFriend);
+                    System.out.println("Sending to #" + messageFromFriend.getConsumerId() + ": " + messageFromFriend);
 
                     messages.add(messageFromFriend);
 

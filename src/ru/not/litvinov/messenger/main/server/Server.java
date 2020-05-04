@@ -16,7 +16,7 @@ public class Server {
     private static ServerHistoryService historyService = new ServerHistoryService();
 
     public static void main(String[] args) {
-        System.out.println("Server is operational...");
+        System.out.println("Server is operational...\n");
 
         /* Server's main loop (server never sleeps) */
         while(true) {
@@ -29,7 +29,7 @@ public class Server {
                 // read the list of messages from the socket
                 Message msg = (Message) in.readObject();
 
-                System.out.println("Received: " + msg);
+                System.out.println("Received from  #" + msg.getSenderId() + ": " + msg);
 
                 ServerTransmitter transmitter = new ServerTransmitter(messageService, msg.getConsumerId(), historyService);
 
@@ -62,7 +62,7 @@ public class Server {
             } catch (IOException | ClassNotFoundException e) {
                 e.printStackTrace();
             } finally {
-                System.out.println("Client disconnected.");
+                System.out.println("---\n");
             }
         }
     }
