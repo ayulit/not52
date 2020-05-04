@@ -24,9 +24,9 @@ public class ClientReceiver {
             try (Socket clientSocket = serverSocket.accept();
                  ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
 
-                // read the list of messages from the socket
-                return (List<Message>) in.readObject();
 //              historyService.save(receivedMessage);
+                return (List<Message>) in.readObject();
+
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }

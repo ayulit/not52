@@ -27,10 +27,11 @@ public class ClientConsoleView implements ClientView {
         public void run() {
 
             // TODO print history (already synchronized at this point)
-//            System.out.println(historyService.getHistory());
+//            List<Message> historyMessages = historyService.getHistoryList();
+//            historyMessages.forEach(System.out::println);
 
             while (!Thread.interrupted()) {
-                List<Message> receivedMessages = clientReceiver.receive();
+                List<Message> receivedMessages = clientReceiver.receive(); // blocking
 
                 if(!receivedMessages.isEmpty()) {
                     receivedMessages.forEach(System.out::println);
@@ -47,14 +48,13 @@ public class ClientConsoleView implements ClientView {
         /* Main Loop */
         try (Scanner sc = new Scanner(System.in)) {
 
-            // FIXME auth
-            // loopsend
+            // TODO auth and sync history
             Message message = new Message(client.getClientId(), client.getClientId(), "AUTH:username_pwd");
             clientTransmitter.transmit(message);
 
             String inputMessage;
             do {
-                inputMessage = sc.next();
+                inputMessage = sc.nextLine();
                 if (EXIT.equals(inputMessage)) {
                     break;
                 }
