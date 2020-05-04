@@ -1,17 +1,24 @@
 package ru.not.litvinov.messenger.main.client.view;
 
+import ru.not.litvinov.messenger.main.client.helper.ClientHelper;
+import ru.not.litvinov.messenger.main.client.helper.Clients;
+import ru.not.litvinov.messenger.main.shared.model.Message;
+
 import java.util.Scanner;
 import java.util.concurrent.BlockingQueue;
 
 public class ClientConsoleView extends Thread {
     private static final String EXIT = "exit";
 
-    private BlockingQueue<String> inQueue;
-    private BlockingQueue<String> outQueue;
+    private BlockingQueue<Message> inQueue;
+    private BlockingQueue<Message> outQueue;
 
-    public ClientConsoleView(BlockingQueue<String> inQueue, BlockingQueue<String> outQueue) {
+    private Clients client;
+
+    public ClientConsoleView(BlockingQueue<Message> inQueue, BlockingQueue<Message> outQueue, Clients client) {
         this.inQueue = inQueue;
         this.outQueue = outQueue;
+        this.client = client;
     }
 
     class ClientConsoleWriter extends Thread {
@@ -23,7 +30,7 @@ public class ClientConsoleView extends Thread {
 
             while (!Thread.interrupted()) {
                 if(!inQueue.isEmpty()) {
-                    String receivedMessage = null;
+                    Message receivedMessage = null;
                     try {
                         receivedMessage = inQueue.take();
                     } catch (InterruptedException e) {
@@ -42,13 +49,18 @@ public class ClientConsoleView extends Thread {
 
         /* Main Loop */
         try (Scanner sc = new Scanner(System.in)) {
+
+            // FIXME auth
+            // loopsend
+            outQueue.put(new Message(client.getClientId(), client.getClientId(), "AUTH:username_pwd"));
+
             String inputMessage;
             do {
                 inputMessage = sc.next();
                 if (EXIT.equals(inputMessage)) {
                     break;
                 }
-                outQueue.put(inputMessage);
+                outQueue.put(new Message(client.getClientId(), ClientHelper.getFriendId(client), inputMessage));
             } while (true);
         } catch (InterruptedException e) {
             e.printStackTrace();
