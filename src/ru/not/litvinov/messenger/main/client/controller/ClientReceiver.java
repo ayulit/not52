@@ -24,9 +24,10 @@ public class ClientReceiver {
             try (Socket clientSocket = serverSocket.accept();
                  ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
 
+                // TODO local history save
 //              historyService.save(receivedMessage);
-                return (List<Message>) in.readObject();
 
+                return (List<Message>) in.readObject();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
@@ -38,5 +39,27 @@ public class ClientReceiver {
 
         // FIXME
         return Collections.emptyList();
+    }
+
+    public Message receiveServiceMessage() {
+        try (ServerSocket serverSocket = new ServerSocket(receivePort)) {
+            serverSocket.setSoTimeout(3000);
+            // block
+            try (Socket clientSocket = serverSocket.accept();
+                 ObjectInputStream in = new ObjectInputStream(clientSocket.getInputStream())) {
+
+                return (Message) in.readObject();
+
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        } catch (SocketTimeoutException e) {
+            // TODO
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // FIXME
+        return new Message(null, null, "");
     }
 }

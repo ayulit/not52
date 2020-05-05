@@ -15,7 +15,7 @@ public class MessageServiceImpl implements MessageService {
     @Override
     public boolean addMessage(Message message) {
 
-        Integer consumerId = message.getConsumerId();
+        Integer consumerId = message.getConsumer().getUserId();
 
         if(!queuePool.containsKey(consumerId)) {
             queuePool.put(consumerId, new ArrayBlockingQueue<>(QUEUE_SIZE));

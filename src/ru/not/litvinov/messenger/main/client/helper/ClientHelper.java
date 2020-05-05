@@ -1,26 +1,21 @@
 package ru.not.litvinov.messenger.main.client.helper;
 
-import static ru.not.litvinov.messenger.main.client.helper.Clients.ANNA;
-import static ru.not.litvinov.messenger.main.client.helper.Clients.CAROL;
+import ru.not.litvinov.messenger.main.shared.model.Client;
 
+import static ru.not.litvinov.messenger.main.client.helper.Friends.ANNA;
+import static ru.not.litvinov.messenger.main.client.helper.Friends.CAROL;
+
+/* FIXME some hardcode for now */
 public class ClientHelper {
-    public static Integer getFriendId(Clients clientId) {
-        Clients friend;
+    public static Client getFriend(Client client) {
+        Friends friend = null;
 
-        switch (clientId) {
-            case ANNA:
-                friend = CAROL;
-                break;
-            case CAROL:
-            default:
-                friend = ANNA;
-                break;
+        if (ANNA.getClient().equals(client)) {
+            friend = CAROL;
+        } else if (CAROL.getClient().equals(client)) {
+            friend = ANNA;
         }
 
-    return friend.getClientId();
-    }
-
-    public static int getPort(Clients client) {
-        return client.getClientId();
+        return friend.getClient();
     }
 }

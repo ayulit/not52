@@ -21,12 +21,12 @@ public class ServerHistoryService {
     }
 
     public boolean saveForSender(Message message) {
-        Integer senderId = message.getSenderId();
+        Integer senderId = message.getSender().getUserId();
         return save(senderId, message);
     }
 
     public boolean saveForConsumer(Message message) {
-        Integer consumerId = message.getConsumerId();
+        Integer consumerId = message.getConsumer().getUserId();
         return save(consumerId, message);
     }
 

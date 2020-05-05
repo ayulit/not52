@@ -3,30 +3,30 @@ package ru.not.litvinov.messenger.main.shared.model;
 import java.io.Serializable;
 
 public class Message implements Serializable {
-    private final String message;
-    private Integer senderId;
-    private Integer consumerId;
+    private final String text;
+    private Client sender;
+    private Client consumer;
 
-    public Message(Integer from, Integer to, String message) {
-        this.senderId = from;
-        this.consumerId = to;
-        this.message = message;
+    public Message(Client from, Client to, String text) {
+        this.sender = from;
+        this.consumer = to;
+        this.text = text;
     }
 
-    public String getMessage() {
-        return message;
+    public String getText() {
+        return text;
     }
 
-    public Integer getSenderId() {
-        return senderId;
+    public Client getSender() {
+        return sender;
     }
 
-    public Integer getConsumerId() {
-        return consumerId;
+    public Client getConsumer() {
+        return consumer;
     }
 
     @Override
     public String toString() {
-        return message;
+        return text;
     }
 }

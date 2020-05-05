@@ -3,6 +3,8 @@ package ru.not.litvinov.messenger.main.server;
 import ru.not.litvinov.messenger.main.server.service.MessageService;
 import ru.not.litvinov.messenger.main.server.service.MessageServiceImpl;
 import ru.not.litvinov.messenger.main.server.service.ServerHistoryService;
+import ru.not.litvinov.messenger.main.server.service.UserService;
+import ru.not.litvinov.messenger.main.shared.model.Client;
 import ru.not.litvinov.messenger.main.shared.model.Message;
 
 import java.io.IOException;
@@ -14,6 +16,7 @@ import java.util.List;
 public class Server {
     private static MessageService messageService = new MessageServiceImpl();
     private static ServerHistoryService historyService = new ServerHistoryService();
+    private static UserService userService = new UserService();
 
     public static void main(String[] args) {
         System.out.println("Server is operational...\n");
@@ -28,21 +31,24 @@ public class Server {
 
                 // read the list of messages from the socket
                 Message msg = (Message) in.readObject();
+                Client sender = msg.getSender();
+                Client consumer = msg.getConsumer();
+                String text = msg.getText();
 
-                System.out.println("Received from  #" + msg.getSenderId() + ": " + msg);
+                System.out.println("Hi, my port is #" + sender.getReceivePort() + ": " + msg);
 
-                ServerTransmitter transmitter = new ServerTransmitter(messageService, msg.getConsumerId(), historyService);
+                ServerTransmitter transmitter = new ServerTransmitter(messageService, consumer, historyService);
 
-                if(msg.getMessage().startsWith("AUTH:")) {
+                if(text.startsWith("REG:")) {
 
-                    Integer senderId = msg.getSenderId();
+                    String credentials = text.split(":")[1];
+                    Client client = userService.addUser(sender, credentials);
 
-                    List<Message> historyMessages = historyService.getHistoryById(senderId);
+                    System.out.println("User #" + client.getUserId() + " registered.");
 
-                    System.out.println("Hello, Client #" + senderId);
+                    Message response = new Message(null, client, "Registered.");
 
-                    /* history first ☝️ */
-                    transmitter.transmit(historyMessages);
+                    transmitter.transmitServiceMessage(response);
 
                     // FIXME THIS: for some reason ClientReceiver is not it time with processing it
                     try {
@@ -51,6 +57,31 @@ public class Server {
                         e.printStackTrace();
                     }
 
+                } else if(text.startsWith("AUTH:")) {
+                    String credentials = text.split(":")[1];
+                    Client client = userService.authUser(sender, credentials);
+
+                    System.out.println("Hello, User #" + client.getUserId());
+
+                    Message response = new Message(null, client, "Authenticated.");
+                    transmitter.transmitServiceMessage(response);
+
+                    // FIXME THIS: for some reason ClientReceiver is not it time with processing it
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                } else if(text.startsWith("HIST:")) {
+                    List<Message> historyMessages = historyService.getHistoryById(sender.getUserId());
+                    transmitter.transmit(historyMessages);
+
+                    // FIXME THIS: for some reason ClientReceiver is not it time with processing it
+                    try {
+                        Thread.sleep(1000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 } else {
                     // save message to DB
                     messageService.addMessage(msg);
